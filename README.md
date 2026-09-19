@@ -1,58 +1,45 @@
-# Insecure Direct Object Reference (IDOR) Learning Project
-![Patience IDOR Exploit](https://img.shields.io/badge/Patience_IDOR-Exploit-black?style=for-the-badge&logo=hackthebox&logoColor=00ff99&labelColor=4b0082)
+# IDOR / Broken Access Control Learning Lab
 
-A hands-on exploitation walkthrough from Ashley Hopkins (Patience) — Cybersecurity & Network Engineering Student  
+An authorized TryHackMe exercise I used to understand how insecure direct object references appear in HTTP requests and why server-side authorization matters.
 
----
+> This repository documents a controlled training environment. It is not a guide for accessing systems or data without authorization.
 
-## Overview  
-This project documents my exploitation of an **Insecure Direct Object Reference (IDOR)** vulnerability inside a TryHackMe learning environment.  
-IDOR occurs when an application exposes internal object identifiers (like `user_id`, `account_id`, or `file_id`) **without verifying whether the logged-in user is actually authorized to access that object**.
+## The vulnerability
 
-In simple terms:  
-> *“If you change a number in the URL and suddenly see someone else’s data — that’s IDOR.”*
+An IDOR occurs when an application accepts an object identifier such as a user ID, account ID, or file ID without correctly checking whether the authenticated user is allowed to access that object.
 
-This vulnerability is part of the **OWASP Top 10: Broken Access Control**, one of the most common and dangerous real-world security issues.
+The important failure is not that an identifier is predictable. The failure is **missing or incorrect authorization on the server**.
 
----
+## What I practiced
 
-## What I Did  
-- Authenticated into the target application  
-- Observed API requests through the browser’s developer tools  
-- Identified the endpoint that exposed `user_id`  
-- Manipulated the `user_id` value to access other users’ account data  
-- Confirmed the IDOR by locating the parent who had **10 children**  
-- Documented the exploitation process and results  
+Inside the training environment, I:
 
----
+- authenticated to the lab application
+- inspected application requests
+- identified a user-controlled object identifier
+- changed the identifier within the authorized exercise
+- observed that the application returned data belonging to another object
+- documented why the behavior represented broken access control
 
-## Lessons Learned  
-- Never trust user-controlled identifiers  
-- Always enforce **server-side authorization checks**  
-- Random IDs (UUIDs) ≠ secure authorization  
-- Horizontal + vertical privilege escalation must both be tested  
-- Logging and monitoring should detect unusual access patterns  
+## Defensive lessons
 
----
+The useful part of this lab was understanding the fix, not just reproducing the flaw.
 
-## How to Prevent IDOR  
-- Enforce permission checks on every sensitive request  
-- Use access control middleware on backend services  
-- Validate ownership of resources (`owner_id == user.id`)  
-- Avoid exposing predictable identifiers  
-- Implement role-based access control (RBAC)  
+Applications should:
 
----
+- authorize every sensitive object request server-side
+- verify resource ownership or permission before returning data
+- apply role and policy checks consistently
+- avoid treating UUIDs or unguessable identifiers as authorization
+- log unusual access patterns that may indicate enumeration
 
-## Author  
-**Ashley Hopkins (Patience)**  
-Cybersecurity & Network Engineering Student  
-Focused on ethical hacking, network security, and hands-on exploitation labs.
+## Why this belongs in my networking portfolio
 
----
+I am primarily focused on network and cloud engineering, but access control affects the infrastructure I help operate.
 
-## 🏷 Repository Topics  
-`cybersecurity` · `idor` · `owasp` · `broken-access-control` ·  
-`advent-of-cyber` · `web-security` · `learning-project`  
+This lab gave me a better understanding of what application teams mean when they discuss broken access control, and it reinforces the security habit I want to carry into infrastructure work: **identity and authorization must be enforced at the boundary where access is granted.**
 
----
+## Related work
+
+- [Network Flight Recorder](https://github.com/PatienceEnoch/network-flight-recorder) — security-aware network evidence, least privilege, guarded remediation
+- [Main profile](https://github.com/PatienceEnoch)
